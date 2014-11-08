@@ -23,32 +23,31 @@ int _elementCount;
     [super viewDidLoad];
     
     UIView *sq = [[UIView alloc] initWithFrame:CGRectMake(100, 100, 100, 100)];
-    [sq setBackgroundColor: [UIColor purpleColor]];
+    sq.backgroundColor = [UIColor purpleColor];
     [self.view addSubview:sq];
     
     UIView *barrier = [[UIView alloc] initWithFrame:CGRectMake(0, 300, 130, 20)];
-    [barrier setBackgroundColor: [UIColor magentaColor]];
+    barrier.backgroundColor = [UIColor magentaColor];
     [self.view addSubview:barrier];
     
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
     _gravity = [[UIGravityBehavior alloc] initWithItems:@[sq]];
     [_animator addBehavior:_gravity];
     
-    CGPoint rightEdge = CGPointMake([barrier frame].origin.x + [barrier frame].size.width, [barrier frame].origin.y );
+    CGPoint rightEdge = CGPointMake( barrier.frame.origin.x + barrier.frame.size.width, barrier.frame.origin.y );
     
     _collision = [[UICollisionBehavior alloc] initWithItems:@[sq]];
-    [_collision setTranslatesReferenceBoundsIntoBoundary:YES];
-    [_collision setCollisionDelegate: self];
+    _collision.translatesReferenceBoundsIntoBoundary = YES;
+    _collision.collisionDelegate = self;
     
-    
-    [_collision addBoundaryWithIdentifier:@"barrier" fromPoint:[barrier frame].origin toPoint:rightEdge];
-    [_collision setAction: ^{
-        NSLog(@"%@, %@",NSStringFromCGAffineTransform(sq.transform),NSStringFromCGPoint([sq center]));
-    }];
+    [_collision addBoundaryWithIdentifier:@"barrier" fromPoint:barrier.frame.origin toPoint:rightEdge];
+    _collision.action = ^{
+        NSLog(@"%@, %@",NSStringFromCGAffineTransform(sq.transform),NSStringFromCGPoint(sq.center));
+    };
     [_animator addBehavior:_collision];
     
     UIDynamicItemBehavior* itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[sq]];
-    [itemBehavior setElasticity:  0.9];
+    itemBehavior.elasticity = 0.9;
     [_animator addBehavior:itemBehavior];
     
 }
@@ -57,18 +56,18 @@ int _elementCount;
     NSLog(@"collBeh %@:", identifier);
     
     UIView* view = (UIView*)item;
-    [view setBackgroundColor: [UIColor yellowColor]];
+    view.backgroundColor = [UIColor yellowColor];
     [UIView animateWithDuration:0.3 animations:^{
-        [view setBackgroundColor: [UIColor grayColor]];
+        view.backgroundColor = [UIColor grayColor];
     }];
     
     if(_elementCount<=10){
         _elementCount++;
         UIView *sq = [[UIView alloc] initWithFrame:CGRectMake(30, 0, 30, 30)];
-        [sq setBackgroundColor: [UIColor orangeColor]];
+        sq.backgroundColor = [UIColor orangeColor];
         
         UIDynamicItemBehavior* itemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[sq]];
-        [itemBehavior setElasticity: 0.9];
+        itemBehavior.elasticity = 0.9;
         [_animator addBehavior:itemBehavior];
         
         
